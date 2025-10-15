@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Website - Projects</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1><i class="fas fa-smile-beam main-logo"></i> Huynh Phan Bao Ngoc</h1> 
+            <ul>
+                <li><a href="#about"><i class="fas fa-user-circle"></i> About</a></li>
+                <li><a href="#projects"><i class="fas fa-folder-open"></i> Projects</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about" class="section">
+            <h2>About Me</h2>
+            <p>Welcome to my personal website. This is where I showcase small completed projects.</p>
+        </section>
+
+        <section id="projects" class="section">
+            <h2>Featured Projects</h2>
+            <div id="pokemon-project" class="project-card">
+                <h3>Project 1: Pokémon Info Viewer</h3>
+                <div id="pokemon-data" class="data-area">
+                    <p>Loading Pokémon data...</p>
+                    </div>
+                <button id="refresh-pokemon">Next Pokémon</button> </div>
+
+            <div id="weather-project" class="project-card">
+                <h3>Project 2: Current Weather</h3>
+                <p class="small-text">Please allow location access to see current weather.</p>
+                <div id="weather-data" class="data-area">
+                    <p>Waiting for location...</p>
+                    </div>
+                <button id="refresh-weather">Refresh Weather</button>
+            </div>
+
+        </section>
+
+        <section id="contact" class="section">
+            <h2>Contact</h2>
+            <p>Email: hpbaongoc220734@gmail.com</p>
+            <p>Phone: 0931938473</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Huynh Phan Bao Ngoc. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
