@@ -13,6 +13,7 @@
             <h1><i class="fas fa-smile-beam main-logo"></i> Huynh Phan Bao Ngoc</h1> 
             <ul>
                 <li><a href="#about"><i class="fas fa-user-circle"></i> About</a></li>
+                <li><a href="#skills"><i class="fas fa-code"></i> Skills</a></li>
                 <li><a href="#projects"><i class="fas fa-folder-open"></i> Projects</a></li>
                 <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
             </ul>
@@ -20,31 +21,92 @@
     </header>
 
     <main>
-        <section id="about" class="section">
+        <!-- ABOUT -->
+         
+         <section id="about" class="section about-section">
             <h2>About Me</h2>
-            <p>Welcome to my personal website. This is where I showcase small completed projects.</p>
+            <div class="about-content">
+
+            <div class="about-text">
+                <h3>Hello, I'm <span>Huynh Phan Bao Ngoc</span> 👋</h3>
+                <p>
+                    I’m a passionate developer with a strong interest in web development,
+                    embedded systems, and machine learning. I love creating creative, interactive,
+                    and practical projects that combine design and technology.
+                </p>
+                <p>
+                    This website showcases my mini projects and experiments. I enjoy learning new
+                    things, exploring new technologies, and continuously improving my skills.
+                </p>
+                    <a href="#projects" class="btn-view">View My Projects</a>
+                </div>
+            </div>
         </section>
 
+        <!-- SKILLS -->
+        <section id="skills" class="section">
+            <h2>My Skills</h2>
+            <div class="skills-container">
+                <div class="skill-card">
+                    <i class="fab fa-html5"></i>
+                    <h3>HTML</h3>
+                    <p>Structure and semantic web layout design.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fab fa-css3-alt"></i>
+                    <h3>CSS</h3>
+                    <p>Responsive design and modern UI effects.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fab fa-js-square"></i>
+                    <h3>JavaScript</h3>
+                    <p>Interactive functionality and DOM manipulation.</p>
+                </div>
+                <div class="skill-card">
+                    <i class="fas fa-database"></i>
+                    <h3>SQL / Database</h3>
+                    <p>Query optimization and data management.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS  -->
         <section id="projects" class="section">
             <h2>Featured Projects</h2>
-            <div id="pokemon-project" class="project-card">
-                <h3>Project 1: Pokémon Info Viewer</h3>
-                <div id="pokemon-data" class="data-area">
-                    <p>Loading Pokémon data...</p>
+            <div class="projects-row">
+                <!-- Pokémon Project -->
+                <div id="pokemon-project" class="project-card">
+                    <h3>Project 1: Pokémon Info Viewer</h3>
+                    <div id="pokemon-data" class="data-area">
+                        <p>Loading Pokémon data...</p>
                     </div>
-                <button id="refresh-pokemon">Next Pokémon</button> </div>
+                    <button id="refresh-pokemon">Next Pokémon</button>
+                </div>
 
-            <div id="weather-project" class="project-card">
-                <h3>Project 2: Current Weather</h3>
-                <p class="small-text">Please allow location access to see current weather.</p>
-                <div id="weather-data" class="data-area">
-                    <p>Waiting for location...</p>
+                <!-- Weather Project -->
+                <div id="weather-project" class="project-card">
+                    <h3>Project 2: Current Weather</h3>
+                    <p class="small-text">Please allow location access to see current weather.</p>
+                    <div id="weather-data" class="data-area">
+                        <p>Waiting for location...</p>
                     </div>
-                <button id="refresh-weather">Refresh Weather</button>
+                    <button id="refresh-weather">Refresh Weather</button>
+                </div>
+
+                <!-- USD to VND Converter -->
+                <div id="currency-project" class="project-card">
+                    <h3>Project 3: USD → VND Converter</h3>
+                    <p class="small-text">Enter amount in USD to convert it into Vietnamese Dong.</p>
+                    <div class="data-area">
+                        <input type="number" id="usd-amount" placeholder="Enter USD" min="0" step="0.01">
+                        <button id="convert-usd">Convert</button>
+                        <p id="vnd-result">Result will appear here</p>
+                    </div>
+                </div>
             </div>
-
         </section>
 
+        <!-- CONTACT -->
         <section id="contact" class="section">
             <h2>Contact</h2>
             <p>Email: hpbaongoc220734@gmail.com</p>
