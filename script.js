@@ -1,10 +1,10 @@
 
-// 1. PROJECT POKÉMON (PokéAPI)
+// PROJECT POKÉMON (PokéAPI)
+
 const pokemonDataElement = document.getElementById('pokemon-data');
 
-// Hàm chọn ngẫu nhiên một ID Pokémon (Ví dụ: từ 1 đến 151)
+// Hàm chọn ngẫu nhiên một ID Pokémon (1–151)
 function getRandomPokemonId() {
-    // Giới hạn Pokémon từ 1 đến 151 (Thế hệ 1)
     return Math.floor(Math.random() * (151 - 1 + 1) + 1);
 }
 
@@ -16,20 +16,15 @@ async function fetchRandomPokemonData() {
     pokemonDataElement.innerHTML = '<p>Đang tải dữ liệu Pokémon ngẫu nhiên...</p>';
     try {
         const response = await fetch(POKEAPI_URL);
-        if (!response.ok) {
-            throw new Error(`Lỗi HTTP: ${response.status}`);
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error(`Lỗi HTTP: ${response.status}`);
 
-        // Lấy thông tin cần thiết
+        const data = await response.json();
         const name = data.name.toUpperCase();
-        const height = (data.height / 10).toFixed(1); // đổi sang mét
-        const weight = (data.weight / 10).toFixed(1); // đổi sang kg
-        // Sử dụng front_default cho hình ảnh
-        const imageUrl = data.sprites.front_default; 
+        const height = (data.height / 10).toFixed(1);
+        const weight = (data.weight / 10).toFixed(1);
+        const imageUrl = data.sprites.front_default;
         const abilities = data.abilities.map(a => a.ability.name).join(', ');
 
-        // Hiển thị dữ liệu
         pokemonDataElement.innerHTML = `
             <img src="${imageUrl}" alt="${name}" style="width: 100px; height: 100px;">
             <h4>${name} (#${data.id})</h4>
@@ -43,7 +38,7 @@ async function fetchRandomPokemonData() {
     }
 }
 
-// 2. PROJECT THỜI TIẾT (Open-Meteo)
+//  PROJECT THỜI TIẾT (Open-Meteo + OpenStreetMap)
 
 const weatherDataElement = document.getElementById('weather-data');
 const refreshWeatherBtn = document.getElementById('refresh-weather');
@@ -52,7 +47,6 @@ const OPENMETEO_BASE_URL = 'https://api.open-meteo.com/v1/forecast?current_weath
 // Hàm ánh xạ mã thời tiết (WMO Code)
 function getWeatherDisplay(wmoCode) {
     const iconBaseClass = 'weather-icon fas'; 
-    
     if (wmoCode === 0) return { icon: `${iconBaseClass} fa-sun`, description: 'Trời quang mây' };
     if (wmoCode >= 1 && wmoCode <= 3) return { icon: `${iconBaseClass} fa-cloud-sun`, description: 'Có mây, Mây rải rác' };
     if (wmoCode >= 45 && wmoCode <= 48) return { icon: `${iconBaseClass} fa-smog`, description: 'Sương mù' };
@@ -61,30 +55,24 @@ function getWeatherDisplay(wmoCode) {
     if (wmoCode >= 71 && wmoCode <= 75) return { icon: `${iconBaseClass} fa-snowflake`, description: 'Tuyết' };
     if (wmoCode >= 80 && wmoCode <= 82) return { icon: `${iconBaseClass} fa-cloud-showers-heavy`, description: 'Mưa rào mạnh' };
     if (wmoCode >= 95 && wmoCode <= 99) return { icon: `${iconBaseClass} fa-bolt`, description: 'Giông bão' };
-    
     return { icon: `${iconBaseClass} fa-question-circle`, description: 'Không xác định' };
 }
 
+// Hàm lấy dữ liệu thời tiết
 async function fetchWeatherData(latitude, longitude) {
     weatherDataElement.innerHTML = '<p>Đang tải dữ liệu thời tiết...</p>';
     try {
         const WEATHER_URL = `${OPENMETEO_BASE_URL}latitude=${latitude}&longitude=${longitude}`;
         const response = await fetch(WEATHER_URL);
-        
-        if (!response.ok) {
-            throw new Error(`Lỗi HTTP: ${response.status}`);
-        }
-        
+        if (!response.ok) throw new Error(`Lỗi HTTP: ${response.status}`);
+
         const data = await response.json();
         const weather = data.current_weather;
-
-        if (!weather) {
-             throw new Error("Không tìm thấy dữ liệu thời tiết.");
-        }
+        if (!weather) throw new Error("Không tìm thấy dữ liệu thời tiết.");
 
         const { icon, description } = getWeatherDisplay(weather.weathercode);
         
-        // Lấy thông tin vị trí (OpenStreetMap)
+        // Lấy thông tin địa điểm (OpenStreetMap)
         const locationResponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`);
         const locationData = await locationResponse.json();
         const locationName = locationData.address.city || locationData.address.town || locationData.address.village || 'Vị trí hiện tại';
@@ -96,7 +84,6 @@ async function fetchWeatherData(latitude, longitude) {
             <p>${description}</p>
             <p class="small-text">Tốc độ gió: ${weather.windspeed} km/h</p>
         `;
-
     } catch (error) {
         console.error("Lỗi khi tải dữ liệu thời tiết:", error);
         weatherDataElement.innerHTML = '<p style="color: red;">Không thể tải dữ liệu thời tiết. Lỗi API hoặc Mất kết nối.</p>';
@@ -123,21 +110,72 @@ function getLocationAndFetchWeather() {
 }
 
 
+// PROJECT QUY ĐỔI TIỀN (USD → VND, dùng API thật)
 
-// 3. KHỞI CHẠY
+
+const usdInput = document.getElementById("usd-amount");
+const convertButton = document.getElementById("convert-usd");
+const vndResult = document.getElementById("vnd-result");
+
+let exchangeRate = null;
+
+// Gọi API để lấy tỷ giá thật
+async function fetchExchangeRate() {
+    try {
+        vndResult.textContent = "Fetching real exchange rate...";
+        const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const data = await response.json();
+        exchangeRate = data.rates.VND;
+        vndResult.textContent = `✅ Current rate: 1 USD = ${exchangeRate.toLocaleString()} VND`;
+        vndResult.style.color = "green";
+    } catch (error) {
+        vndResult.textContent = "⚠️ Failed to fetch exchange rate. Using default 25,000 VND.";
+        exchangeRate = 25000;
+        vndResult.style.color = "orange";
+    }
+}
+
+// Chuyển đổi USD → VND
+convertButton.addEventListener("click", () => {
+    const usdValue = parseFloat(usdInput.value);
+    if (isNaN(usdValue) || usdValue <= 0) {
+        vndResult.textContent = "❌ Please enter a valid amount.";
+        vndResult.style.color = "red";
+        return;
+    }
+
+    if (!exchangeRate) {
+        vndResult.textContent = "⏳ Please wait, fetching exchange rate...";
+        vndResult.style.color = "orange";
+        return;
+    }
+
+    const vndValue = usdValue * exchangeRate;
+    vndResult.textContent = `💰 ${usdValue.toFixed(2)} USD = ${vndValue.toLocaleString()} VND`;
+    vndResult.style.color = "green";
+});
+
+// Cập nhật tỷ giá mỗi 30 phút
+setInterval(fetchExchangeRate, 30 * 60 * 1000);
+
+
+// KHỞI CHẠY (Khi trang load)
+
 
 const refreshPokemonBtn = document.getElementById('refresh-pokemon');
 
-// Gọi khi trang tải xong
 document.addEventListener('DOMContentLoaded', () => {
-    fetchRandomPokemonData(); 
-    getLocationAndFetchWeather(); 
+    fetchRandomPokemonData();      // Lấy Pokémon ngẫu nhiên
+    getLocationAndFetchWeather();  // Lấy thời tiết
+    fetchExchangeRate();           // Lấy tỷ giá ban đầu
 });
 
-// Xử lý sự kiện nút Làm mới Pokémon
+// Nút "Next Pokémon"
 if (refreshPokemonBtn) {
     refreshPokemonBtn.addEventListener('click', fetchRandomPokemonData);
 }
 
-// Xử lý sự kiện nút Làm mới thời tiết
-refreshWeatherBtn.addEventListener('click', getLocationAndFetchWeather);
+// Nút "Refresh Weather"
+if (refreshWeatherBtn) {
+    refreshWeatherBtn.addEventListener('click', getLocationAndFetchWeather);
+}
